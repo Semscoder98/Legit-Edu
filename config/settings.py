@@ -10,6 +10,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "guru-texts-thousands-sailing.trycloudflare.com"
+    "https://legitedu.vercel.app/"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
