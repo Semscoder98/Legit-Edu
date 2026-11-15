@@ -1,0 +1,57 @@
+{% for comment in comments %}
+{% if comment.is_approved %}
+<div class="comment-thread">
+    <div class="comment-item compact-comment comment-parent">
+        <div class="comment-avatar"><i class="fa fa-user"></i></div>
+        <div class="comment-body">
+            <div class="comment-bubble">
+                <div class="comment-line">
+                    <strong>{{ comment.display_name }}</strong>
+                    <small class="text-muted">{{ comment.created_at|date:"N j, Y" }}</small>
+                </div>
+                <p>{{ comment.body }}</p>
+            </div>
+            <button class="btn btn-sm btn-link p-0 reply-toggle" data-reply="reply-{{ comment.id }}">Reply</button>
+            <form method="post" id="reply-{{ comment.id }}" class="reply-form mt-2" style="display:none;">
+                {% csrf_token %}
+                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                {% if not user.is_authenticated %}
+                <input type="text" name="guest_name" class="form-control form-control-sm mb-2" placeholder="Your name (optional)">
+                {% endif %}
+                <textarea name="body" class="form-control form-control-sm" rows="2" placeholder="Reply to {{ comment.display_name }}..." required></textarea>
+                <button type="submit" class="btn btn-primary btn-sm mt-2">Reply</button>
+            </form>
+        </div>
+    </div>
+
+    {% if comment.flat_replies %}
+    <div class="comment-replies-under-parent">
+        {% for reply in comment.flat_replies %}
+        <div class="comment-item compact-comment comment-reply-under">
+            <div class="comment-avatar"><i class="fa fa-user"></i></div>
+            <div class="comment-body">
+                <div class="comment-bubble">
+                    <div class="comment-line">
+                        <strong>{{ reply.display_name }}</strong>
+                        <small class="text-muted">{{ reply.created_at|date:"N j, Y" }}</small>
+                    </div>
+                    <p><a href="#" class="reply-mention">@{{ reply.parent.display_name }}</a> {{ reply.body }}</p>
+                </div>
+                <button class="btn btn-sm btn-link p-0 reply-toggle" data-reply="reply-{{ reply.id }}">Reply</button>
+                <form method="post" id="reply-{{ reply.id }}" class="reply-form mt-2" style="display:none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ reply.id }}">
+                    {% if not user.is_authenticated %}
+                    <input type="text" name="guest_name" class="form-control form-control-sm mb-2" placeholder="Your name (optional)">
+                    {% endif %}
+                    <textarea name="body" class="form-control form-control-sm" rows="2" placeholder="Reply to {{ reply.display_name }}..." required></textarea>
+                    <button type="submit" class="btn btn-primary btn-sm mt-2">Reply</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endfor %}

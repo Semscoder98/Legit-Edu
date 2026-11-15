@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}LegitEdu Consults{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_desc %}Nigeria's leading education news, JAMB updates, and scholarship portal{% endblock %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <!-- Google Fonts: Playfair Display + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/legitedu.css' %}?v=4">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar d-none d-lg-block">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav class="d-flex align-items-center gap-3">
+                    <span class="topbar-date"><i class="fa-regular fa-calendar me-1"></i>{% now "l, N j, Y" %}</span>
+                    <a href="{% url 'home' %}#advertise" class="topbar-link">Advertise</a>
+                    <a href="{% url 'contact' %}" class="topbar-link">Contact</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="topbar-link">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="topbar-link">Login</a>
+                    {% endif %}
+                </nav>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="social-links">
+                    <a href="https://twitter.com/edu_legit" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=100083277192391" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/legit_edu_consults" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN NAVBAR ── -->
+<nav class="navbar navbar-expand-lg main-nav sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+            <img src="{% static 'img/legit-logo.jpg' %}" alt="LegitEdu logo" class="brand-icon">
+            <span class="brand-text" style="color:#ffff;">Legit<span style="color:#FCAF01;">Edu</span></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{% url 'post_list' %}" data-bs-toggle="dropdown">Blog</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'post_list' %}">All Posts</a></li>
+                        {% for cat in all_categories %}
+                        <li><a class="dropdown-item" href="{% url 'category_detail' cat.slug %}">{{ cat.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'scholarship_list' %}">Scholarship</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+            </ul>
+            <form class="d-none d-lg-flex search-form" action="{% url 'post_list' %}" method="get">
+                <input class="form-control" type="search" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+                <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+    <div class="container d-lg-none pb-2">
+        <form class="d-flex search-form mobile-search-form" action="{% url 'post_list' %}" method="get">
+            <input class="form-control" type="search" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+            <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+</nav>
+
+<!-- ── MESSAGES ── -->
+{% if messages %}
+<div class="container mt-2">
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- ── PAGE CONTENT ── -->
+{% block content %}{% endblock %}
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h3 class="footer-brand">Legit<span>Edu</span></h3>
+                <p>Nigeria's most trusted education news portal — covering JAMB, scholarships, admissions, and everything students need to succeed.</p>
+                <ul class="footer-contact list-unstyled mt-3">
+                    <li><i class="fa fa-envelope me-2"></i>legiteduconsults@gmail.com</li>
+                    <li><i class="fa fa-globe me-2"></i>www.legiteduconsults.com</li>
+                    <li><i class="fa fa-location-dot me-2"></i>LASUSTECH Isolo Campus</li>
+                    <li><i class="fa fa-phone me-2"></i>+234 907 945 3337</li>
+                </ul>            
+                <div class="social-links mt-3">
+                    <a href="https://twitter.com/edu_legit" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=100083277192391" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <!-- <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a> -->
+                    <a href="https://instagram.com/legit_edu_consults" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <h6 class="footer-heading">Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'post_list' %}">Blog</a></li>
+                    <li><a href="{% url 'scholarship_list' %}">Scholarships</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-6">
+                <h6 class="footer-heading">Categories</h6>
+                <ul class="footer-links">
+                    {% for cat in all_categories|slice:":6" %}
+                    <li><a href="{% url 'category_detail' cat.slug %}">{{ cat.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h6 class="footer-heading">Recent Posts</h6>
+                {% for post in recent_posts|slice:":4" %}
+                <div class="footer-post d-flex gap-2 mb-3">
+                    {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}">{% else %}<div class="footer-post-placeholder"></div>{% endif %}
+                    <a href="{% url 'post_detail' post.slug %}">{{ post.title|truncatechars:55 }}</a>
+                </div>
+                {% empty %}
+                <p class="small text-muted">No recent posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-muted">&copy; {% now "Y" %} LegitEdu Consults. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-muted me-3" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+                <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Use</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+<!-- WhatsApp Channel Popup -->
+<div class="modal fade" id="whatsappJoinModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content join-popup">
+            <button type="button" class="btn-close join-popup-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body text-center p-4">
+                <div class="join-icon"><i class="fab fa-whatsapp"></i></div>
+                <h4 class="mb-2">Join Our WhatsApp Channel</h4>
+                <p class="text-muted mb-4">Get admission, JAMB, scholarship and school updates faster on WhatsApp.</p>
+                <a href="https://whatsapp.com/channel/0029Vb5V2ij3QxS0nI0q6A0h" target="_blank" class="btn btn-primary px-4"><i class="fab fa-whatsapp me-2"></i>Join / Chat Us</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content policy-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>LegitEdu Consults respects your privacy. We collect only the information needed to respond to enquiries, process subscriptions, improve our services, and send education updates.</p>
+                <p>Your name, email address, and messages submitted through forms may be stored securely for communication purposes. We do not sell your personal information to third parties.</p>
+                <p>By using this website, you agree that we may contact you with relevant admission, scholarship, JAMB, and education updates. You may unsubscribe or request removal of your details at any time.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content policy-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms of Use</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Information on LegitEdu Consults is provided for educational guidance and update purposes. Users are advised to confirm official admission, scholarship, and school information from relevant institutions before taking final action.</p>
+                <p>You may not copy, misuse, or republish our content without permission. We may update these terms whenever necessary.</p>
+                <p>By continuing to use this website, you agree to use the information responsibly and not hold LegitEdu Consults liable for decisions made without official verification.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% load static %}
+<script src="{% static 'js/legitedu.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

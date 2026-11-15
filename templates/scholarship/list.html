@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Scholarships — LegitEdu{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>Scholarships</h1>
+        <p>Find fully-funded and partial scholarships for Nigerian students worldwide.</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="filter-bar mb-4">
+                <a href="{% url 'scholarship_list' %}" class="filter-btn {% if not active_level %}active{% endif %}">All</a>
+                <a href="?level=undergraduate" class="filter-btn {% if active_level == 'undergraduate' %}active{% endif %}">Undergraduate</a>
+                <a href="?level=postgraduate" class="filter-btn {% if active_level == 'postgraduate' %}active{% endif %}">Postgraduate</a>
+                <a href="?level=phd" class="filter-btn {% if active_level == 'phd' %}active{% endif %}">PhD</a>
+            </div>
+            <div class="row g-4">
+                {% for s in page_obj %}
+                <div class="col-md-6">
+                    <article class="scholarship-card">
+                        {% if s.cover_image %}<img src="{{ s.cover_image.url }}" alt="{{ s.title }}" class="scholarship-img">{% else %}<div class="scholarship-img placeholder-img"></div>{% endif %}
+                        <div class="scholarship-body">
+                            <span class="level-badge">{{ s.get_level_display }}</span>
+                            <h5><a href="{% url 'scholarship_detail' s.slug %}">{{ s.title }}</a></h5>
+                            <p class="text-muted small mb-2"><i class="fa fa-building me-1"></i>{{ s.organization }}</p>
+                            <p class="text-muted small mb-3"><i class="fa fa-globe me-1"></i>{{ s.country }}</p>
+                            {% if s.deadline %}<p class="deadline-badge">Deadline: {{ s.deadline|date:"N j, Y" }}</p>{% endif %}
+                            <a href="{% url 'scholarship_detail' s.slug %}" class="btn btn-outline-primary btn-sm">Learn More</a>
+                        </div>
+                    </article>
+                </div>
+                {% empty %}
+                <div class="col-12"><div class="empty-state-card text-center"><i class="fa fa-graduation-cap fa-3x mb-3"></i><h5>No scholarships found</h5><p>Check back soon or browse latest admission and education updates.</p><a href="{% url 'post_list' %}" class="btn btn-primary btn-sm">View Latest News</a></div></div>
+                {% endfor %}
+            </div>
+        </div>
+        <aside class="col-lg-4">
+            {% include 'includes/sidebar.html' %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

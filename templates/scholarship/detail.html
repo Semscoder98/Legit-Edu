@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ scholarship.title }} — LegitEdu Scholarship{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <article class="post-detail scholarship-detail">
+                <span class="level-badge mb-3 d-inline-block">{{ scholarship.get_level_display }}</span>
+                <h1 class="post-detail-title">{{ scholarship.title }}</h1>
+                <div class="post-detail-meta mb-4">
+                    <span><i class="fa fa-building me-1"></i>{{ scholarship.organization }}</span>
+                    <span><i class="fa fa-globe me-1"></i>{{ scholarship.country }}</span>
+                    {% if scholarship.deadline %}<span><i class="fa fa-clock me-1"></i>Deadline: {{ scholarship.deadline|date:"F j, Y" }}</span>{% endif %}
+                </div>
+
+                {% if scholarship.cover_image %}
+                <img src="{{ scholarship.cover_image.url }}" alt="{{ scholarship.title }}" class="post-detail-cover mb-4">
+                {% endif %}
+
+                <div class="post-detail-body">{{ scholarship.description|safe }}</div>
+
+                <div class="content-section mt-4">
+                    <h4>Eligibility</h4>
+                    <div>{{ scholarship.eligibility|safe }}</div>
+                </div>
+
+                <div class="content-section mt-4">
+                    <h4>Benefits</h4>
+                    <div>{{ scholarship.benefits|safe }}</div>
+                </div>
+
+                {% if scholarship.attachments.all %}
+                <div class="download-box mt-4">
+                    <h5><i class="fa fa-paperclip me-2"></i>Downloads</h5>
+                    {% for item in scholarship.attachments.all %}
+                    <a href="{{ item.file.url }}" class="d-block mb-2" download><i class="fa fa-download me-1"></i>{{ item.title|default:item.file.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="help-cta my-4">
+                    <i class="fab fa-whatsapp me-2"></i>
+                    Need help in registration Process?
+                    <a href="https://wa.me/2349079453337" target="_blank">Click here</a> to chat us for your admission guide.
+                </div>
+
+                <div class="scholarship-actions mt-4">
+                    <a href="{{ scholarship.application_url }}" target="_blank" class="btn btn-primary btn-lg">Apply Now</a>
+                </div>
+
+                <div class="share-bar mt-4">
+                    <span class="fw-semibold me-3">Share:</span>
+                    <a href="https://twitter.com/intent/tweet?text={{ scholarship.title|urlencode }}&url={{ request.build_absolute_uri }}" target="_blank" class="share-btn twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://api.whatsapp.com/send?text={{ scholarship.title|urlencode }}%20{{ request.build_absolute_uri }}" target="_blank" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ scholarship.title|urlencode }}" target="_blank" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    <button type="button" class="share-btn copy-link" data-copy-url="{{ request.build_absolute_uri }}" title="Copy link"><i class="fa fa-link"></i></button>
+                    <span class="copy-feedback small text-success ms-2" style="display:none;">Copied!</span>
+                </div>
+            </article>
+
+            <div class="comments-section mt-5">
+                <h4 class="section-title mb-4">Comments ({{ comment_count }})</h4>
+                {% if comments %}
+                    {% include 'includes/comment_tree.html' with comments=comments nested=False %}
+                {% else %}
+                    <p class="text-muted">No comments yet. Be the first!</p>
+                {% endif %}
+
+                <div class="comment-form mt-4">
+                    <h5>Leave a Comment</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="text" name="guest_name" class="form-control mb-2" placeholder="Your name (optional)">
+                        <textarea name="body" class="form-control" rows="3" placeholder="Share your thoughts..." required></textarea>
+                        <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <aside class="col-lg-4">
+            <div class="sidebar-card mb-4">
+                <h5 class="sidebar-title">Scholarship Summary</h5>
+                <p><strong>Level:</strong> {{ scholarship.get_level_display }}</p>
+                <p><strong>Country:</strong> {{ scholarship.country }}</p>
+                <p><strong>Organization:</strong> {{ scholarship.organization }}</p>
+                {% if scholarship.deadline %}<p><strong>Deadline:</strong> {{ scholarship.deadline|date:"N j, Y" }}</p>{% endif %}
+            </div>
+            {% include 'includes/sidebar.html' %}
+        </aside>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.copy-link').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(btn.dataset.copyUrl);
+    const msg = btn.parentElement.querySelector('.copy-feedback');
+    if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 1800); }
+  });
+});
+document.querySelectorAll('.reply-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const form = document.getElementById(btn.dataset.reply);
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  });
+});
+</script>
+{% endblock %}

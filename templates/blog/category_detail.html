@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }} — LegitEdu{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}<p>{{ category.description }}</p>{% endif %}
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="row g-4">
+                {% for post in page_obj %}
+                <div class="col-md-6">
+                    <article class="post-card">
+                        <a href="{% url 'post_detail' post.slug %}" class="post-card-img-wrap">
+                            {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="post-card-img">{% else %}<div class="post-card-img placeholder-img"></div>{% endif %}
+                            <span class="cat-badge overlay-badge">{{ category.name }}</span>
+                        </a>
+                        <div class="post-card-body">
+                            <a href="{% url 'post_detail' post.slug %}" class="post-card-title">{{ post.title }}</a>
+                            <p class="post-card-excerpt">{{ post.excerpt|default:post.body|striptags|truncatechars:120 }}</p>
+                        </div>
+                    </article>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5"><p class="text-muted">No posts in this category yet.</p></div>
+                {% endfor %}
+            </div>
+        </div>
+        <aside class="col-lg-4">
+            {% include 'includes/sidebar.html' %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

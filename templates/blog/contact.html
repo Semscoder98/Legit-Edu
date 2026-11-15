@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us — LegitEdu{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>Contact Us</h1></div></div>
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <h4 class="mb-4">Send Us a Message</h4>
+            <form method="post" class="contact-form">
+                {% csrf_token %}
+                <div class="mb-3"><label class="form-label">Name</label><input type="text" class="form-control {% if form_errors.name %}is-invalid{% endif %}" name="name" value="{{ form_data.name|default:'' }}" required>{% if form_errors.name %}<div class="invalid-feedback">{{ form_errors.name }}</div>{% endif %}</div>
+                <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control {% if form_errors.email %}is-invalid{% endif %}" name="email" value="{{ form_data.email|default:'' }}" required>{% if form_errors.email %}<div class="invalid-feedback">{{ form_errors.email }}</div>{% endif %}</div>
+                <div class="mb-3"><label class="form-label">Subject</label><input type="text" class="form-control" name="subject" value="{{ form_data.subject|default:'' }}"></div>
+                <div class="mb-3"><label class="form-label">Message</label><textarea class="form-control {% if form_errors.message %}is-invalid{% endif %}" name="message" rows="5" required>{{ form_data.message|default:'' }}</textarea>{% if form_errors.message %}<div class="invalid-feedback">{{ form_errors.message }}</div>{% endif %}</div>
+                <button type="submit" class="btn btn-primary px-4">Send Message</button>
+            </form>
+        </div>
+        <div class="col-lg-5">
+            <h4 class="mb-4">Get In Touch</h4>
+            <div class="contact-info mb-4">
+                <div class="contact-item"><i class="fa fa-envelope text-primary me-3"></i><span>legiteduconsults@gmail.com</span></div>
+                <div class="contact-item"><i class="fa fa-globe text-primary me-3"></i><span>www.legiteduconsults.com</span></div>
+                <div class="contact-item"><i class="fa fa-location-dot text-primary me-3"></i><span>+LASUSTECH Isolo Campus</span></div>
+                <div class="contact-item"><i class="fa fa-phone text-primary me-3"></i><span>+234 907 945 3337</span></div>
+            </div>
+            <div class="sidebar-card mb-4 newsletter-card">
+                <h5 class="sidebar-title">Sign Up for Newsletter</h5>
+                <p class="small text-muted">Get fresh admission, JAMB and scholarship updates directly.</p>
+                <form class="newsletter-form" method="post" action="{% url 'newsletter_subscribe' %}">
+                    <div class="input-group">
+                        {% csrf_token %}
+                        <input type="email" name="email" class="form-control" placeholder="Email address" aria-label="Email address" required>
+                        <button class="btn btn-primary" type="submit">Join</button>
+                    </div>
+                </form>
+            </div>
+            <div class="sidebar-card follow-card">
+                <h5 class="sidebar-title">Follow Us</h5>
+                <a class="follow-row facebook" href="https://www.facebook.com/profile.php?id=100083277192391" target="_blank"><span><i class="fab fa-facebook-f"></i></span><strong>Facebook</strong></a>
+                <a class="follow-row twitter" href="https://twitter.com/edu_legit" target="_blank"><span><i class="fab fa-x-twitter"></i></span><strong>X / Twitter</strong></a>
+                <!-- <a class="follow-row linkedin" href="#" target="_blank"><span><i class="fab fa-linkedin-in"></i></span><strong>LinkedIn</strong></a> -->
+                <a class="follow-row instagram" href="https://instagram.com/legit_edu_consults" target="_blank"><span><i class="fab fa-instagram"></i></span><strong>Instagram</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

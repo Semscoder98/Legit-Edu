@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}About Us — LegitEdu{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1>About LegitEdu Consults</h1><p>Your Education, Our Priority.</p></div></div>
+<div class="container py-5">
+    <div class="row g-5 align-items-center mb-5">
+        <div class="col-lg-7">
+            <h2 class="mb-4">Nigeria's Trusted Education Portal</h2>
+            <p>LegitEdu Consults provides reliable education news, admission guidance, JAMB updates, scholarship opportunities, school information, and helpful resources for Nigerian students and parents.</p>
+            <p>We are focused on helping students make better academic decisions through timely information, mentorship, and practical admission support.</p>
+        </div>
+        <div class="col-lg-5 text-center">
+            <div class="about-stats">
+                <div class="stat-item"><span class="stat-num">10K+</span><span>Monthly Readers</span></div>
+                <div class="stat-item"><span class="stat-num">500+</span><span>Articles Published</span></div>
+                <div class="stat-item"><span class="stat-num">100+</span><span>Scholarships Listed</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="sidebar-card h-100">
+                <h3 class="sidebar-title">Our Mission</h3>
+                <p>To make verified education information, admission support, and scholarship opportunities accessible to every student who needs guidance.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="sidebar-card h-100">
+                <h3 class="sidebar-title">Our Vision</h3>
+                <p>To become one of Nigeria's most trusted digital education platforms for students, parents, schools, and admission seekers.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="sidebar-card h-100 text-center">
+                <i class="fa fa-newspaper fa-2x mb-3 text-primary"></i>
+                <h5>Education News</h5>
+                <p>Fresh updates on admissions, schools, policies, examinations, and academic opportunities.</p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="sidebar-card h-100 text-center">
+                <i class="fa fa-graduation-cap fa-2x mb-3 text-primary"></i>
+                <h5>Admission Guidance</h5>
+                <p>Support for candidates seeking JAMB, Post-UTME, university, polytechnic, and nursing admission.</p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="sidebar-card h-100 text-center">
+                <i class="fa fa-award fa-2x mb-3 text-primary"></i>
+                <h5>Scholarship Updates</h5>
+                <p>Verified local and international scholarships, grants, bursaries, and funding opportunities.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mb-4">
+        <h3 class="section-title d-inline-block mb-3">Meet Our Team</h3>
+        <p class="mx-auto" style="max-width: 720px;">Our team is made up of education consultants, content editors, admission mentors, and digital support professionals committed to student success.</p>
+    </div>
+    <div class="row g-4 team-grid">
+        {% for member in team_members %}
+        <div class="col-md-6 col-lg-3">
+            <div class="team-card">
+                <div class="team-photo">
+                    {% if member.photo %}
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+                    {% else %}
+                    <i class="fa fa-user-graduate"></i>
+                    {% endif %}
+                </div>
+                <h5>{{ member.name }}</h5>
+                <p>{{ member.role }}</p>
+                <div class="team-socials">
+                    {% if member.facebook %}<a href="{{ member.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                    {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                    {% if member.instagram %}<a href="{{ member.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                    {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank"><i class="fab fa-x-twitter"></i></a>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-md-6 col-lg-3">
+            <div class="team-card">
+                <div class="team-photo"><i class="fa fa-user-graduate"></i></div>
+                <h5>Tande Semeton</h5>
+                <p>CEO / Education Consultant</p>
+                <div class="team-socials"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

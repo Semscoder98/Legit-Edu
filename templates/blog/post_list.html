@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if query %}Search: {{ query }}{% elif active_category %}{{ active_category.name }}{% else %}All Posts{% endif %} — LegitEdu{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="section-header mb-4">
+                <h2 class="section-title">
+                    {% if query %}Results for "{{ query }}"
+                    {% elif active_category %}{{ active_category.name }}
+                    {% else %}All Posts{% endif %}
+                </h2>
+                <span class="text-muted">{{ page_obj.paginator.count }} article{{ page_obj.paginator.count|pluralize }}</span>
+            </div>
+            <div class="row g-4">
+                {% for post in page_obj %}
+                <div class="col-md-6">
+                    <article class="post-card">
+                        <a href="{% url 'post_detail' post.slug %}" class="post-card-img-wrap">
+                            {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="post-card-img">{% else %}<div class="post-card-img placeholder-img"></div>{% endif %}
+                            {% if post.category %}<span class="card-cat">{{ post.category.name }}</span>{% endif %}
+                        </a>
+                        <div class="post-card-body">
+                            <a href="{% url 'post_detail' post.slug %}" class="post-card-title">{{ post.title }}</a>
+                            <p class="post-card-excerpt">{{ post.excerpt|default:post.body|striptags|truncatechars:120 }}</p>
+                            <div class="post-card-author-row">
+    <div class="post-card-author">
+        {% if post.author.profile.photo %}
+        <img src="{{ post.author.profile.photo.url }}" alt="{{ post.author.get_full_name|default:post.author.username }}">
+        {% else %}
+        <span class="author-avatar-fallback"><i class="fa fa-user"></i></span>
+        {% endif %}
+        <span>{{ post.author.get_full_name|default:post.author.username }}</span>
+    </div>
+    <div class="post-card-stats">
+        <span><i class="fa-regular fa-eye"></i> {{ post.views }}</span>
+        <span><i class="fa-regular fa-comment"></i> {{ post.comments.count }}</span>
+    </div>
+</div>
+                        </div>
+                    </article>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="empty-state-card text-center">
+                        <i class="fa fa-newspaper fa-3x mb-3"></i>
+                        <h5>No posts found{% if query %} for "{{ query }}"{% endif %}</h5>
+                        <p>Try another keyword or check the latest education updates.</p>
+                        <a href="{% url 'post_list' %}" class="btn btn-primary btn-sm">View Latest News</a>
+                        <a href="{% url 'scholarship_list' %}" class="btn btn-outline-primary btn-sm ms-2">Scholarships</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Prev</a></li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+        <aside class="col-lg-4">
+            {% include 'includes/sidebar.html' %}
+        </aside>
+    </div>
+</div>
+{% endblock %}
